@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>¿Quién tiene el cuaderno?</title>
+<meta name="description" content="Registra quién fue el último que cogió el cuaderno de aula y desde cuándo lo tiene.">
+<style>
+  :root {
+    --fondo:   #fbfbfc;
+    --panel:   #ffffff;
+    --borde:   #e5e7eb;
+    --texto:   #17191d;
+    --suave:   #6b7280;
+    --tenue:   #9aa1ac;
+    --acento:  #2563eb;
+    --suavefondo: #f5f7fa;
+    --rojo:    #b91c1c;
+    --naranja: #c2410c;
+    --verde:   #15803d;
+    --radio:   14px;
+    --col:     52rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fondo:   #0f1114;
+      --panel:   #16181d;
+      --borde:   #262a32;
+      --texto:   #e7e9ec;
+      --suave:   #9aa1ac;
+      --tenue:   #6b7280;
+      --acento:  #6f9bff;
+      --suavefondo: #14161a;
+      --rojo:    #f87171;
+      --naranja: #fb923c;
+      --verde:   #4ade80;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 1.2rem 1rem 4rem;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px; line-height: 1.55;
+    background: var(--fondo); color: var(--texto);
+    -webkit-font-smoothing: antialiased;
+  }
+  .contenedor { max-width: var(--col); margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 1.3rem; }
+  h1 { margin: 0 0 .2rem; font-size: clamp(1.4rem, 4.5vw, 2rem); letter-spacing: -.02em; }
+  .lema { margin: 0; color: var(--suave); font-size: .92rem; }
+
+  .panel {
+    background: var(--panel); border: 1px solid var(--borde);
+    border-radius: var(--radio); padding: 1.1rem 1.1rem 1.2rem;
+    margin-bottom: 1.1rem;
+  }
+  .panel h2 {
+    margin: 0 0 .8rem; font-size: .78rem; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--tenue); font-weight: 700;
+  }
+
+  /* ---------- Quien lo tiene ahora ---------- */
+  #ahora { text-align: center; padding: 1.5rem 1.1rem; }
+  .etiqueta-ahora {
+    margin: 0 0 .45rem; font-size: .78rem; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--tenue); font-weight: 700;
+  }
+  #quien {
+    margin: 0; font-size: clamp(1.7rem, 7vw, 2.6rem); font-weight: 800;
+    letter-spacing: -.03em; line-height: 1.15;
+  }
+  #quien.libre { color: var(--verde); }
+  #desde { margin: .5rem 0 0; color: var(--suave); font-size: .95rem; }
+  #hace {
+    display: inline-block; margin-top: .6rem; padding: .25rem .7rem;
+    border-radius: 999px; background: var(--suavefondo);
+    border: 1px solid var(--borde); font-size: .85rem; color: var(--suave);
+    font-variant-numeric: tabular-nums;
+  }
+  #contexto { margin: .7rem 0 0; color: var(--suave); font-size: .92rem; }
+  #contexto:empty { display: none; }
+
+  /* ---------- Formulario ---------- */
+  .campos { display: grid; gap: .7rem; grid-template-columns: 1fr 1fr; }
+  .campo { display: flex; flex-direction: column; gap: .3rem; }
+  .campo.ancho { grid-column: 1 / -1; }
+  label { font-size: .82rem; color: var(--suave); font-weight: 600; }
+  input, select, textarea {
+    font: inherit; font-size: 1rem; color: var(--texto);
+    background: var(--fondo); border: 1px solid var(--borde);
+    border-radius: 10px; padding: .55rem .7rem; width: 100%;
+  }
+  textarea { resize: vertical; min-height: 2.6rem; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible {
+    outline: 2px solid var(--acento); outline-offset: 2px;
+  }
+
+  .acciones { display: grid; gap: .6rem; grid-template-columns: 2fr 1fr; margin-top: .9rem; }
+  button {
+    font: inherit; font-weight: 700; cursor: pointer;
+    border-radius: 10px; padding: .7rem .9rem;
+    border: 1px solid var(--borde); background: var(--panel); color: var(--texto);
+  }
+  button:hover { background: var(--suavefondo); }
+  button.principal {
+    background: var(--acento); border-color: var(--acento); color: #fff;
+  }
+  button.principal:hover { filter: brightness(1.08); }
+  button.pequeno { padding: .4rem .7rem; font-size: .85rem; font-weight: 600; }
+  button.peligro { color: var(--rojo); }
+
+  /* ---------- Historial ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  th, td { text-align: left; padding: .5rem .45rem; border-bottom: 1px solid var(--borde); vertical-align: top; }
+  th { font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; color: var(--tenue); }
+  td.cuando { white-space: nowrap; color: var(--suave); font-variant-numeric: tabular-nums; }
+  td.nombre { font-weight: 700; }
+  td.borrar { text-align: right; width: 2.4rem; }
+  td.borrar button {
+    border: 0; background: none; color: var(--tenue); padding: .1rem .3rem;
+    font-size: 1.05rem; line-height: 1;
+  }
+  td.borrar button:hover { color: var(--rojo); background: none; }
+  .tabla-scroll { overflow-x: auto; }
+  .vacio { color: var(--tenue); font-size: .92rem; margin: 0; }
+  tr.devolucion td.nombre { font-weight: 600; color: var(--verde); }
+
+  .fila-botones { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .nota {
+    margin: .9rem 0 0; font-size: .85rem; color: var(--suave);
+    background: var(--suavefondo); border: 1px solid var(--borde);
+    border-radius: 10px; padding: .6rem .75rem;
+  }
+  .nota strong { color: var(--texto); }
+
+  @media (max-width: 34rem) {
+    .campos, .acciones { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="contenedor">
+
+  <header>
+    <h1>¿Quién tiene el cuaderno?</h1>
+    <p class="lema">Cuaderno de aula · quién lo cogió el último y desde cuándo</p>
+  </header>
+
+  <section class="panel" id="ahora">
+    <p class="etiqueta-ahora">Lo tiene ahora</p>
+    <p id="quien">—</p>
+    <p id="desde"></p>
+    <span id="hace"></span>
+    <p id="contexto"></p>
+  </section>
+
+  <section class="panel">
+    <h2>Registrar</h2>
+    <div class="campos">
+      <div class="campo">
+        <label for="nombre">Quién lo coge</label>
+        <input id="nombre" list="nombres-guardados" autocomplete="off" placeholder="Nombre">
+        <datalist id="nombres-guardados"></datalist>
+      </div>
+      <div class="campo">
+        <label for="grupo">Grupo o hora <span style="color:var(--tenue)">(opcional)</span></label>
+        <input id="grupo" list="grupos-guardados" autocomplete="off" placeholder="1SMX A · 3ª hora">
+        <datalist id="grupos-guardados"></datalist>
+      </div>
+      <div class="campo ancho">
+        <label for="nota">Nota <span style="color:var(--tenue)">(opcional)</span></label>
+        <textarea id="nota" rows="1" placeholder="Lo dejo en el cajón de la mesa del profesor"></textarea>
+      </div>
+    </div>
+    <div class="acciones">
+      <button class="principal" id="btn-coger">Lo cojo yo</button>
+      <button id="btn-devolver">Lo he devuelto</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Historial</h2>
+    <div class="tabla-scroll">
+      <table id="tabla" hidden>
+        <thead>
+          <tr><th>Cuándo</th><th>Quién</th><th>Grupo / hora</th><th>Nota</th><th></th></tr>
+        </thead>
+        <tbody id="cuerpo"></tbody>
+      </table>
+    </div>
+    <p class="vacio" id="sin-historial">Todavía no hay registros.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Copia de seguridad</h2>
+    <div class="fila-botones">
+      <button class="pequeno" id="btn-exportar">Descargar copia (.json)</button>
+      <button class="pequeno" id="btn-importar">Cargar copia…</button>
+      <button class="pequeno peligro" id="btn-vaciar">Vaciar todo</button>
+      <input type="file" id="fichero" accept="application/json,.json" hidden>
+    </div>
+    <p class="nota">
+      <strong>Esto se guarda solo en este navegador y en este dispositivo.</strong>
+      No se sube a ningún sitio y no lo ven otros equipos. Si se borran los datos del navegador,
+      o se abre en modo privado, el historial no estará. Por eso conviene descargar la copia
+      de vez en cuando.
+    </p>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var CLAVE = "cuaderno-de-aula:v1";
+  var MAX_HISTORIAL = 300;
+
+  // ---------- Almacenamiento (localStorage puede fallar o estar vacío) ----------
+  var memoria = null; // respaldo en memoria si localStorage no está disponible
+
+  function leer() {
+    if (memoria) return memoria;
+    try {
+      var bruto = window.localStorage.getItem(CLAVE);
+      if (!bruto) return { registros: [] };
+      var datos = JSON.parse(bruto);
+      if (!datos || !Array.isArray(datos.registros)) return { registros: [] };
+      return datos;
+    } catch (e) {
+      return { registros: [] };
+    }
+  }
+
+  function guardar(datos) {
+    memoria = datos;
+    try {
+      window.localStorage.setItem(CLAVE, JSON.stringify(datos));
+      memoria = null;
+    } catch (e) {
+      // se queda en memoria durante esta sesión
+    }
+  }
+
+  // ---------- Utilidades ----------
+  var $ = function (id) { return document.getElementById(id); };
+
+  function fechaLarga(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    var dias = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+    var meses = ["enero","febrero","marzo","abril","mayo","junio",
+                 "julio","agosto","septiembre","octubre","noviembre","diciembre"];
+    return dias[d.getDay()] + " " + d.getDate() + " de " + meses[d.getMonth()] +
+           ", " + dos(d.getHours()) + ":" + dos(d.getMinutes());
+  }
+
+  function fechaCorta(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return dos(d.getDate()) + "/" + dos(d.getMonth() + 1) + " " +
+           dos(d.getHours()) + ":" + dos(d.getMinutes());
+  }
+
+  function dos(n) { return n < 10 ? "0" + n : "" + n; }
+
+  function hace(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return "";
+    var seg = Math.floor((Date.now() - d.getTime()) / 1000);
+    if (seg < 0) return "en el futuro";
+    if (seg < 60) return "hace un momento";
+    var min = Math.floor(seg / 60);
+    if (min < 60) return "hace " + min + (min === 1 ? " minuto" : " minutos");
+    var h = Math.floor(min / 60);
+    var rm = min % 60;
+    if (h < 24) {
+      return "hace " + h + (h === 1 ? " hora" : " horas") +
+             (rm ? " y " + rm + " min" : "");
+    }
+    var dd = Math.floor(h / 24);
+    if (dd < 30) return "hace " + dd + (dd === 1 ? " día" : " días");
+    var mm = Math.floor(dd / 30);
+    return "hace " + mm + (mm === 1 ? " mes" : " meses");
+  }
+
+  function unicos(lista) {
+    var vistos = {}, fuera = [];
+    for (var i = 0; i < lista.length; i++) {
+      var v = (lista[i] || "").trim();
+      if (v && !vistos[v.toLowerCase()]) { vistos[v.toLowerCase()] = 1; fuera.push(v); }
+    }
+    return fuera;
+  }
+
+  function opciones(datalist, valores) {
+    datalist.textContent = "";
+    for (var i = 0; i < valores.length; i++) {
+      var o = document.createElement("option");
+      o.value = valores[i];
+      datalist.appendChild(o);
+    }
+  }
+
+  // ---------- Pintar ----------
+  function pintar() {
+    var datos = leer();
+    var regs = datos.registros;
+    var ultimo = regs.length ? regs[0] : null;
+
+    // Quién lo tiene
+    var elQuien = $("quien"), elDesde = $("desde"), elHace = $("hace"), elCtx = $("contexto");
+    if (!ultimo) {
+      elQuien.textContent = "Nadie lo ha registrado";
+      elQuien.className = "libre";
+      elDesde.textContent = "";
+      elHace.textContent = "";
+      elCtx.textContent = "";
+    } else if (ultimo.tipo === "devolucion") {
+      elQuien.textContent = "Está en su sitio";
+      elQuien.className = "libre";
+      elDesde.textContent = "Lo devolvió " + ultimo.nombre + " el " + fechaLarga(ultimo.fecha);
+      elHace.textContent = hace(ultimo.fecha);
+      elCtx.textContent = ultimo.nota || "";
+    } else {
+      elQuien.textContent = ultimo.nombre;
+      elQuien.className = "";
+      elDesde.textContent = "Lo cogió el " + fechaLarga(ultimo.fecha);
+      elHace.textContent = hace(ultimo.fecha);
+      var partes = [];
+      if (ultimo.grupo) partes.push(ultimo.grupo);
+      if (ultimo.nota) partes.push(ultimo.nota);
+      elCtx.textContent = partes.join(" · ");
+    }
+
+    // Historial
+    var cuerpo = $("cuerpo"), tabla = $("tabla"), sin = $("sin-historial");
+    cuerpo.textContent = "";
+    if (!regs.length) {
+      tabla.hidden = true;
+      sin.hidden = false;
+    } else {
+      tabla.hidden = false;
+      sin.hidden = true;
+      for (var i = 0; i < regs.length; i++) {
+        var r = regs[i];
+        var tr = document.createElement("tr");
+        if (r.tipo === "devolucion") tr.className = "devolucion";
+
+        var td1 = document.createElement("td");
+        td1.className = "cuando";
+        td1.textContent = fechaCorta(r.fecha);
+        tr.appendChild(td1);
+
+        var td2 = document.createElement("td");
+        td2.className = "nombre";
+        td2.textContent = r.tipo === "devolucion" ? r.nombre + " (devuelto)" : r.nombre;
+        tr.appendChild(td2);
+
+        var td3 = document.createElement("td");
+        td3.textContent = r.grupo || "";
+        tr.appendChild(td3);
+
+        var td4 = document.createElement("td");
+        td4.textContent = r.nota || "";
+        tr.appendChild(td4);
+
+        var td5 = document.createElement("td");
+        td5.className = "borrar";
+        var b = document.createElement("button");
+        b.type = "button";
+        b.textContent = "×";
+        b.title = "Borrar este registro";
+        b.setAttribute("aria-label", "Borrar el registro de " + r.nombre);
+        b.setAttribute("data-id", r.id);
+        td5.appendChild(b);
+        tr.appendChild(td5);
+
+        cuerpo.appendChild(tr);
+      }
+    }
+
+    // Sugerencias
+    var nombres = [], grupos = [];
+    for (var j = 0; j < regs.length; j++) {
+      nombres.push(regs[j].nombre);
+      if (regs[j].grupo) grupos.push(regs[j].grupo);
+    }
+    opciones($("nombres-guardados"), unicos(nombres));
+    opciones($("grupos-guardados"), unicos(grupos));
+  }
+
+  // ---------- Acciones ----------
+  function nuevoId() {
+    return String(Date.now()) + "-" + Math.floor(Math.random() * 100000);
+  }
+
+  function anotar(tipo) {
+    var nombre = $("nombre").value.trim();
+    if (!nombre) {
+      $("nombre").focus();
+      return;
+    }
+    var datos = leer();
+    datos.registros.unshift({
+      id: nuevoId(),
+      tipo: tipo,
+      nombre: nombre,
+      grupo: $("grupo").value.trim(),
+      nota: $("nota").value.trim(),
+      fecha: new Date().toISOString()
+    });
+    if (datos.registros.length > MAX_HISTORIAL) {
+      datos.registros = datos.registros.slice(0, MAX_HISTORIAL);
+    }
+    guardar(datos);
+    $("nota").value = "";
+    pintar();
+  }
+
+  $("btn-coger").addEventListener("click", function () { anotar("cogida"); });
+  $("btn-devolver").addEventListener("click", function () { anotar("devolucion"); });
+
+  $("nombre").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); anotar("cogida"); }
+  });
+
+  $("cuerpo").addEventListener("click", function (e) {
+    var id = e.target && e.target.getAttribute && e.target.getAttribute("data-id");
+    if (!id) return;
+    var datos = leer();
+    datos.registros = datos.registros.filter(function (r) { return r.id !== id; });
+    guardar(datos);
+    pintar();
+  });
+
+  $("btn-exportar").addEventListener("click", function () {
+    var datos = leer();
+    var texto = JSON.stringify(datos, null, 2);
+    var hoy = new Date();
+    var nombre = "cuaderno-de-aula-" + hoy.getFullYear() + dos(hoy.getMonth() + 1) + dos(hoy.getDate()) + ".json";
+    var url = URL.createObjectURL(new Blob([texto], { type: "application/json" }));
+    var a = document.createElement("a");
+    a.href = url; a.download = nombre;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  });
+
+  $("btn-importar").addEventListener("click", function () { $("fichero").click(); });
+
+  $("fichero").addEventListener("change", function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    var lector = new FileReader();
+    lector.onload = function () {
+      try {
+        var datos = JSON.parse(String(lector.result));
+        if (!datos || !Array.isArray(datos.registros)) throw new Error("formato");
+        guardar({ registros: datos.registros.slice(0, MAX_HISTORIAL) });
+        pintar();
+      } catch (err) {
+        window.alert("Ese fichero no es una copia válida del cuaderno.");
+      }
+      $("fichero").value = "";
+    };
+    lector.readAsText(f);
+  });
+
+  $("btn-vaciar").addEventListener("click", function () {
+    if (!window.confirm("¿Borrar todo el historial? No se puede deshacer.")) return;
+    guardar({ registros: [] });
+    pintar();
+  });
+
+  // Refrescar el "hace X" sin recargar
+  setInterval(pintar, 60000);
+
+  pintar();
+})();
+</script>
+</body>
+</html>
