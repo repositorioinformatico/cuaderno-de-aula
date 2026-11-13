@@ -8,8 +8,9 @@ escribe.
 
 ## Qué hace
 
-- **Plano de mesas** en rejilla. El tamaño se cambia con los botones `+ Fila` / `+ Columna`
-  (hasta 12 × 10).
+- **Plano de mesas** en rejilla. El tamaño solo se toca entrando en `🗺️ Editar mapa del aula`:
+  ahí aparecen `+ Fila` / `− Fila` / `+ Columna` / `− Columna` (hasta 12 × 10) y la medida actual.
+  Fuera de ese modo los botones no se ven, para no tocarlos sin querer en clase.
 - **Nombres de los alumnos**: con `✏️ Editar nombres` cada mesa pasa a ser un campo de texto. Se
   guarda según se escribe.
 - **La mesa por donde empezó**: fuera del modo edición, tocar una mesa la marca en verde con el

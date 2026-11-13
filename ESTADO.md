@@ -27,7 +27,8 @@ Un único `index.html` (22 KB, sin dependencias), con los tokens de color de sus
 
 - Rejilla de mesas redimensionable, sin rótulos de orientación en el plano, con la flecha
   de dirección a la izquierda y la mitad de la hoja a la derecha.
-- Modo «editar nombres»: cada mesa es un campo de texto que se guarda según se escribe.
+- Dos modos exclusivos: «editar nombres» (cada mesa es un campo de texto que se guarda según se
+  escribe) y «editar mapa del aula» (solo entonces salen los botones de filas y columnas).
 - Marcar la mesa de inicio tocándola (verde, con rótulo «Empezó aquí»).
 - Flecha verde grande en el lateral que gira 180° entre delante y detrás.
 - Dibujo de la hoja partida en dos mitades (arriba / abajo), al lado derecho del plano.

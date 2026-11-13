@@ -162,6 +162,9 @@
   button.peligro { color: var(--rojo); }
   .mini { font-size: .85rem; padding: .35rem .6rem; }
   .nota { color: var(--suave); font-size: .85rem; margin: .7rem 0 0; }
+  button.activo { background: var(--acento); border-color: var(--acento); color: #fff; }
+  button.activo:hover { filter: brightness(1.08); border-color: var(--acento); }
+  .medida { color: var(--suave); font-size: .85rem; font-variant-numeric: tabular-nums; }
 
   /* ---------- Historial ---------- */
   table { width: 100%; border-collapse: collapse; font-size: .88rem; }
@@ -222,10 +225,14 @@
     </div>
     <div class="fila" style="margin-top:1rem">
       <button class="mini" id="btn-editar">✏️ Editar nombres</button>
+      <button class="mini" id="btn-mapa">🗺️ Editar mapa del aula</button>
+    </div>
+    <div class="fila" id="controles-mapa" hidden>
       <button class="mini" id="mas-fila">+ Fila</button>
       <button class="mini" id="menos-fila">− Fila</button>
       <button class="mini" id="mas-col">+ Columna</button>
       <button class="mini" id="menos-col">− Columna</button>
+      <span class="medida" id="medida"></span>
     </div>
     <p class="nota" id="nota-plano">Toca una mesa para marcar por dónde empezó el cuaderno. La flecha de la izquierda es la dirección y la hoja de la derecha, la mitad en la que toca escribir.</p>
   </section>
@@ -298,7 +305,8 @@
   }
 
   var estado = leer();
-  var editando = false;
+  var editando = false;   // modo «editar nombres»
+  var editandoMapa = false; // modo «editar mapa del aula»
 
   var $ = function (id) { return document.getElementById(id); };
 
@@ -473,6 +481,7 @@
     pintarFlecha();
     pintarSeccion();
     pintarHistorial();
+    pintarModos();
   }
 
   // ---------- acciones ----------
@@ -493,12 +502,32 @@
     guardar(estado);
   });
 
+  var NOTA_NORMAL = "Toca una mesa para marcar por dónde empezó el cuaderno. La flecha de la izquierda es la dirección y la hoja de la derecha, la mitad en la que toca escribir.";
+  var NOTA_NOMBRES = "Escribe el nombre de cada alumno en su mesa. Se guarda solo.";
+  var NOTA_MAPA = "Ajusta el plano hasta que coincida con el aula. Las mesas que se queden fuera pierden su nombre de la vista, pero no se borran.";
+
+  function pintarModos() {
+    var btnNombres = $("btn-editar");
+    var btnMapa = $("btn-mapa");
+
+    btnNombres.textContent = editando ? "✔️ Listo" : "✏️ Editar nombres";
+    btnNombres.classList.toggle("activo", editando);
+
+    btnMapa.textContent = editandoMapa ? "✔️ Listo" : "🗺️ Editar mapa del aula";
+    btnMapa.classList.toggle("activo", editandoMapa);
+
+    $("controles-mapa").hidden = !editandoMapa;
+    $("medida").textContent = estado.filas + " filas × " + estado.columnas + " mesas";
+
+    $("nota-plano").textContent = editando ? NOTA_NOMBRES
+      : editandoMapa ? NOTA_MAPA
+      : NOTA_NORMAL;
+  }
+
   $("btn-editar").addEventListener("click", function () {
     editando = !editando;
-    this.textContent = editando ? "✔️ Listo" : "✏️ Editar nombres";
-    $("nota-plano").textContent = editando
-      ? "Escribe el nombre de cada alumno en su mesa. Se guarda solo."
-      : "Toca una mesa para marcar por dónde empezó el cuaderno. La flecha de la izquierda es la dirección y la hoja de la derecha, la mitad en la que toca escribir.";
+    if (editando) editandoMapa = false;
+    pintarModos();
     pintarMesas();
     if (editando) {
       var primero = document.querySelector("#mesas input");
@@ -506,6 +535,16 @@
     } else {
       pintarResumen();
     }
+  });
+
+  $("btn-mapa").addEventListener("click", function () {
+    editandoMapa = !editandoMapa;
+    if (editandoMapa && editando) {
+      editando = false;
+      pintarMesas();
+      pintarResumen();
+    }
+    pintarModos();
   });
 
   $("flecha").addEventListener("click", function () {
