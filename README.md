@@ -17,8 +17,9 @@ escribe.
   rótulo «Empezó aquí». Tocarla otra vez la desmarca.
 - **Flecha verde grande en el lateral**: la dirección en que avanza el cuaderno. Se pulsa y gira
   180°, entre **hacia delante** y **hacia detrás**.
-- **Parte de la hoja**: al otro lado del plano, bajo el rótulo «Hoy se escribe», un dibujo de la
-  hoja partida en dos con la mitad **arriba** o **abajo** en verde.
+- **Parte de la hoja**: **justo debajo de la flecha**, bajo el rótulo «Hoy se escribe», un dibujo
+  de la hoja partida en dos con la mitad **arriba** o **abajo** en verde. Van juntas a propósito:
+  de una mirada al lateral se ve hacia dónde va el cuaderno y dónde toca escribir hoy.
 - **Resumen arriba del todo** con el nombre, la posición, la dirección y la mitad de la hoja.
 - **Guardar la clase** deja constancia fechada en el historial (200 clases, borrables una a una).
 - **Copia de seguridad** en `.json`, descargable y recargable.

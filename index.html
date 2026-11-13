@@ -85,8 +85,11 @@
 
   /* ---------- Plano del aula ---------- */
   .aula { display: flex; gap: .9rem; align-items: stretch; }
+  .lateral {
+    flex: 0 0 6rem; display: flex; flex-direction: column; gap: .7rem; min-width: 0;
+  }
   .flecha-lateral {
-    flex: 0 0 4.6rem; display: flex; flex-direction: column;
+    flex: 1 1 auto; min-height: 9rem; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: .5rem;
     background: var(--verdefondo); border: 2px solid var(--verdeborde);
     border-radius: var(--radio); padding: .7rem .3rem; cursor: pointer;
@@ -125,7 +128,7 @@
 
   /* ---------- Sección del cuaderno (lateral derecho) ---------- */
   .hoja-lateral {
-    flex: 0 0 5.6rem; display: flex; flex-direction: column;
+    flex: 0 0 auto; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: .5rem;
     border: 2px solid var(--borde); border-radius: var(--radio);
     padding: .7rem .4rem; background: var(--suavefondo);
@@ -177,12 +180,13 @@
   @media (max-width: 600px) {
     .aula { flex-direction: column; }
     .plano { order: -1; }
+    .lateral { flex: 0 0 auto; flex-direction: row; gap: .6rem; }
     .flecha-lateral, .hoja-lateral {
-      flex: 0 0 auto; flex-direction: row; justify-content: center;
-      gap: .9rem; padding: .6rem;
+      flex: 1 1 0; min-height: 0; flex-direction: row;
+      justify-content: center; gap: .7rem; padding: .6rem;
     }
     .flecha-lateral svg { width: 2rem; }
-    .hoja { max-width: 9rem; }
+    .hoja { max-width: 7rem; }
     .mitad { height: 2.1rem; }
   }
 </style>
@@ -205,22 +209,24 @@
   <section class="panel">
     <h2>Plano del aula</h2>
     <div class="aula">
-      <div class="flecha-lateral" id="flecha" title="Pulsa para cambiar la dirección">
-        <svg viewBox="0 0 40 110" fill="none" aria-hidden="true">
-          <path d="M20 4 L36 34 L26 34 L26 106 L14 106 L14 34 L4 34 Z"
-                fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-        </svg>
-        <span class="flecha-texto" id="flecha-texto">Hacia delante</span>
+      <div class="lateral">
+        <div class="flecha-lateral" id="flecha" title="Pulsa para cambiar la dirección">
+          <svg viewBox="0 0 40 110" fill="none" aria-hidden="true">
+            <path d="M20 4 L36 34 L26 34 L26 106 L14 106 L14 34 L4 34 Z"
+                  fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <span class="flecha-texto" id="flecha-texto">Hacia delante</span>
+        </div>
+        <div class="hoja-lateral">
+          <span class="lateral-titulo">Hoy se escribe</span>
+          <div class="hoja">
+            <div class="mitad" data-seccion="arriba">Arriba</div>
+            <div class="mitad" data-seccion="abajo">Abajo</div>
+          </div>
+        </div>
       </div>
       <div class="plano">
         <div id="mesas"></div>
-      </div>
-      <div class="hoja-lateral">
-        <span class="lateral-titulo">Hoy se escribe</span>
-        <div class="hoja">
-          <div class="mitad" data-seccion="arriba">Arriba</div>
-          <div class="mitad" data-seccion="abajo">Abajo</div>
-        </div>
       </div>
     </div>
     <div class="fila" style="margin-top:1rem">
@@ -234,7 +240,7 @@
       <button class="mini" id="menos-col">− Columna</button>
       <span class="medida" id="medida"></span>
     </div>
-    <p class="nota" id="nota-plano">Toca una mesa para marcar por dónde empezó el cuaderno. La flecha de la izquierda es la dirección y la hoja de la derecha, la mitad en la que toca escribir.</p>
+    <p class="nota" id="nota-plano">Toca una mesa para marcar por dónde empezó el cuaderno. A la izquierda, la flecha dice hacia dónde va y justo debajo, en qué mitad de la hoja toca escribir hoy.</p>
   </section>
 
   <section class="panel">
@@ -502,7 +508,7 @@
     guardar(estado);
   });
 
-  var NOTA_NORMAL = "Toca una mesa para marcar por dónde empezó el cuaderno. La flecha de la izquierda es la dirección y la hoja de la derecha, la mitad en la que toca escribir.";
+  var NOTA_NORMAL = "Toca una mesa para marcar por dónde empezó el cuaderno. A la izquierda, la flecha dice hacia dónde va y justo debajo, en qué mitad de la hoja toca escribir hoy.";
   var NOTA_NOMBRES = "Escribe el nombre de cada alumno en su mesa. Se guarda solo.";
   var NOTA_MAPA = "Ajusta el plano hasta que coincida con el aula. Las mesas que se queden fuera pierden su nombre de la vista, pero no se borran.";
 
