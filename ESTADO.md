@@ -25,7 +25,7 @@ cogidas y devoluciones se quitó.
 Un único `index.html` (22 KB, sin dependencias), con los tokens de color de sus otras webs
 (`que-entrega-toca`), claro y oscuro automáticos.
 
-- Rejilla de mesas redimensionable, pizarra arriba y fondo del aula abajo.
+- Rejilla de mesas redimensionable, sin rótulos de orientación en el plano.
 - Modo «editar nombres»: cada mesa es un campo de texto que se guarda según se escribe.
 - Marcar la mesa de inicio tocándola (verde, con rótulo «Empezó aquí»).
 - Flecha verde grande en el lateral que gira 180° entre delante y detrás.

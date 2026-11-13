@@ -8,14 +8,14 @@ escribe.
 
 ## Qué hace
 
-- **Plano de mesas** en rejilla, con la pizarra arriba y el fondo del aula abajo. El tamaño se
-  cambia con los botones `+ Fila` / `+ Columna` (hasta 12 × 10).
+- **Plano de mesas** en rejilla. El tamaño se cambia con los botones `+ Fila` / `+ Columna`
+  (hasta 12 × 10).
 - **Nombres de los alumnos**: con `✏️ Editar nombres` cada mesa pasa a ser un campo de texto. Se
   guarda según se escribe.
 - **La mesa por donde empezó**: fuera del modo edición, tocar una mesa la marca en verde con el
   rótulo «Empezó aquí». Tocarla otra vez la desmarca.
 - **Flecha verde grande en el lateral**: la dirección en que avanza el cuaderno. Se pulsa y gira
-  180°, entre **hacia delante** (hacia la pizarra) y **hacia detrás** (hacia el fondo).
+  180°, entre **hacia delante** y **hacia detrás**.
 - **Parte de la hoja**: un dibujo de la hoja partida en dos, con la mitad **arriba** o **abajo**
   en verde.
 - **Resumen arriba del todo** con el nombre, la posición, la dirección y la mitad de la hoja.
@@ -43,8 +43,8 @@ bajo la clave `cuaderno-de-aula:v2`.
 }
 ```
 
-Las mesas se identifican por `"fila-columna"` empezando en 0, así que `"0-0"` es la de delante a
-la izquierda. Si se quitan filas o columnas y la mesa marcada se queda fuera del plano, se
+Las mesas se identifican por `"fila-columna"` empezando en 0, así que `"0-0"` es la de arriba a
+la izquierda del plano. Si se quitan filas o columnas y la mesa marcada se queda fuera del plano, se
 desmarca sola.
 
 **La v1 (quién se llevó el cuaderno) está en el historial de git**, en el commit `d76723b`. La
