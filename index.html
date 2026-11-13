@@ -123,20 +123,30 @@
   }
   .mesa input:focus { outline: 2px solid var(--acento); outline-offset: 2px; border-radius: 5px; }
 
-  /* ---------- Sección del cuaderno ---------- */
-  .secciones { display: flex; gap: .8rem; align-items: center; flex-wrap: wrap; }
+  /* ---------- Sección del cuaderno (lateral derecho) ---------- */
+  .hoja-lateral {
+    flex: 0 0 5.6rem; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: .5rem;
+    border: 2px solid var(--borde); border-radius: var(--radio);
+    padding: .7rem .4rem; background: var(--suavefondo);
+  }
+  .lateral-titulo {
+    font-size: .62rem; font-weight: 800; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--tenue); text-align: center; line-height: 1.25;
+  }
   .hoja {
-    flex: 0 0 7rem; border: 2px solid var(--borde); border-radius: 8px;
-    overflow: hidden; background: var(--panel);
+    width: 100%; max-width: 7rem; border: 2px solid var(--borde);
+    border-radius: 8px; overflow: hidden; background: var(--panel);
   }
   .mitad {
-    height: 2.6rem; display: flex; align-items: center; justify-content: center;
+    height: 2.5rem; display: flex; align-items: center; justify-content: center;
     font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--tenue); cursor: pointer;
+    color: var(--tenue); cursor: pointer; user-select: none; -webkit-user-select: none;
   }
   .mitad + .mitad { border-top: 2px dashed var(--borde); }
+  .mitad:hover { background: var(--suavefondo); }
   .mitad.activa { background: var(--verdefondo); color: var(--verde); }
-  .ayuda-seccion { flex: 1 1 12rem; color: var(--suave); font-size: .88rem; margin: 0; }
+  .mitad.activa:hover { background: var(--verdefondo); }
 
   /* ---------- Controles ---------- */
   .fila { display: flex; gap: .55rem; flex-wrap: wrap; align-items: center; }
@@ -161,10 +171,16 @@
   td.fecha { color: var(--suave); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .vacio-tabla { color: var(--tenue); font-style: italic; }
 
-  @media (max-width: 520px) {
-    .aula { flex-direction: column-reverse; }
-    .flecha-lateral { flex-direction: row; justify-content: center; gap: .9rem; padding: .6rem; }
+  @media (max-width: 600px) {
+    .aula { flex-direction: column; }
+    .plano { order: -1; }
+    .flecha-lateral, .hoja-lateral {
+      flex: 0 0 auto; flex-direction: row; justify-content: center;
+      gap: .9rem; padding: .6rem;
+    }
     .flecha-lateral svg { width: 2rem; }
+    .hoja { max-width: 9rem; }
+    .mitad { height: 2.1rem; }
   }
 </style>
 </head>
@@ -196,6 +212,13 @@
       <div class="plano">
         <div id="mesas"></div>
       </div>
+      <div class="hoja-lateral">
+        <span class="lateral-titulo">Hoy se escribe</span>
+        <div class="hoja">
+          <div class="mitad" data-seccion="arriba">Arriba</div>
+          <div class="mitad" data-seccion="abajo">Abajo</div>
+        </div>
+      </div>
     </div>
     <div class="fila" style="margin-top:1rem">
       <button class="mini" id="btn-editar">✏️ Editar nombres</button>
@@ -204,18 +227,7 @@
       <button class="mini" id="mas-col">+ Columna</button>
       <button class="mini" id="menos-col">− Columna</button>
     </div>
-    <p class="nota" id="nota-plano">Toca una mesa para marcar por dónde empezó el cuaderno.</p>
-  </section>
-
-  <section class="panel">
-    <h2>¿En qué parte de la hoja se escribe?</h2>
-    <div class="secciones">
-      <div class="hoja">
-        <div class="mitad" data-seccion="arriba">Arriba</div>
-        <div class="mitad" data-seccion="abajo">Abajo</div>
-      </div>
-      <p class="ayuda-seccion">La mitad verde es donde toca escribir en el cuaderno. Pulsa la otra para cambiarla.</p>
-    </div>
+    <p class="nota" id="nota-plano">Toca una mesa para marcar por dónde empezó el cuaderno. La flecha de la izquierda es la dirección y la hoja de la derecha, la mitad en la que toca escribir.</p>
   </section>
 
   <section class="panel">
@@ -486,7 +498,7 @@
     this.textContent = editando ? "✔️ Listo" : "✏️ Editar nombres";
     $("nota-plano").textContent = editando
       ? "Escribe el nombre de cada alumno en su mesa. Se guarda solo."
-      : "Toca una mesa para marcar por dónde empezó el cuaderno.";
+      : "Toca una mesa para marcar por dónde empezó el cuaderno. La flecha de la izquierda es la dirección y la hoja de la derecha, la mitad en la que toca escribir.";
     pintarMesas();
     if (editando) {
       var primero = document.querySelector("#mesas input");

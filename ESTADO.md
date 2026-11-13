@@ -25,11 +25,12 @@ cogidas y devoluciones se quitó.
 Un único `index.html` (22 KB, sin dependencias), con los tokens de color de sus otras webs
 (`que-entrega-toca`), claro y oscuro automáticos.
 
-- Rejilla de mesas redimensionable, sin rótulos de orientación en el plano.
+- Rejilla de mesas redimensionable, sin rótulos de orientación en el plano, con la flecha
+  de dirección a la izquierda y la mitad de la hoja a la derecha.
 - Modo «editar nombres»: cada mesa es un campo de texto que se guarda según se escribe.
 - Marcar la mesa de inicio tocándola (verde, con rótulo «Empezó aquí»).
 - Flecha verde grande en el lateral que gira 180° entre delante y detrás.
-- Dibujo de la hoja partida en dos mitades, arriba / abajo.
+- Dibujo de la hoja partida en dos mitades (arriba / abajo), al lado derecho del plano.
 - Resumen grande arriba del todo con las tres cosas a la vez.
 - Historial de 200 clases guardadas, borrables por fila.
 - Exportar e importar `.json`.
