@@ -1,28 +1,46 @@
-# Estado — ¿Quién tiene el cuaderno?
+# Estado — Por dónde empezó el cuaderno de aula
 
-**Creado:** 12/11/2026
-**Estado:** 🟢 funcionando en local · ⬜ sin repo en GitHub · ⬜ sin Pages
+**Creado:** 12/11/2026 · **Replanteado:** 13/11/2026
+**Estado:** 🟢 publicado en https://repositorioinformatico.github.io/cuaderno-de-aula/
 
 ## Qué se pidió
+
+El 12/11, la v1:
 > «quiero hacer esto en web estática que se almacene en el localstorage, hacer web donde se
 > registre quien fue el ultimo que inicio el cuaderno de aula»
 
-## Qué está hecho
-Un único `index.html` (16 KB, sin dependencias), con los estilos y los tokens de color de sus
-otras webs (`que-entrega-toca`), claro y oscuro automáticos.
+El 13/11, el cambio de rumbo (v2):
+> «quiero que le cambies el titulo […] por donde empezo a rellenarse el cuaderno de aula en la
+> ultima clase […] que visualmente muestre la disposicion de mesas y nombres y que me permita
+> escribir los nombres de cada alumno en cada mesa y que indiquemos con una flecha grande verde
+> en el lateral, la orientacion del cuaderno de aula hacia delante o hacia detras y en que
+> seccion del cuaderno se tiene que escribir si arriba o abajo»
 
-- Panel grande con quién lo tiene y el «hace X» que se actualiza solo.
-- Registrar cogida / devolución, con grupo-hora y nota opcionales.
-- Historial de 300 registros con borrado por fila.
-- Autocompletado de nombres y grupos ya usados.
+**Lo que cambió de verdad:** la v1 registraba *personas y horas* (quién se lo llevó). La v2 ya no
+registra eso: es un **plano del aula** que responde a «¿por dónde seguimos hoy?». Todo lo de
+cogidas y devoluciones se quitó.
+
+## Qué está hecho
+
+Un único `index.html` (22 KB, sin dependencias), con los tokens de color de sus otras webs
+(`que-entrega-toca`), claro y oscuro automáticos.
+
+- Rejilla de mesas redimensionable, pizarra arriba y fondo del aula abajo.
+- Modo «editar nombres»: cada mesa es un campo de texto que se guarda según se escribe.
+- Marcar la mesa de inicio tocándola (verde, con rótulo «Empezó aquí»).
+- Flecha verde grande en el lateral que gira 180° entre delante y detrás.
+- Dibujo de la hoja partida en dos mitades, arriba / abajo.
+- Resumen grande arriba del todo con las tres cosas a la vez.
+- Historial de 200 clases guardadas, borrables por fila.
 - Exportar e importar `.json`.
 - Todos los accesos a `localStorage` van en `try/catch`, con respaldo en memoria si falla.
 
 ## ⬜ Pendiente
-- ⬜ **Decidir si vale con un solo dispositivo.** Si varios profesores van a registrar desde su
+
+- ⬜ **Probarlo en la tablet o en el ordenador del aula**, que es donde se va a usar de verdad.
+- ⬜ **Decidir si vale con un solo dispositivo.** Si varios profesores van a marcarlo desde su
   propio móvil, **localStorage no puede hacerlo** y hay que llevarlo a avinox. Ver README.
-- ⬜ Crear el repo en GitHub y activar Pages (comandos en el README).
-- ⬜ Probarlo en la tablet o en el ordenador del aula.
-- ⬜ Preguntar a Joaquín qué significa exactamente «inició» el cuaderno: ahora está montado como
-  **«lo cogió»** (quién se lo llevó y desde cuándo). Si lo que quiere es **quién escribió la última
-  anotación**, el texto de los botones cambia, pero la estructura sirve igual.
+- ⬜ **Ajustar el plano al aula real** (cuántas filas y cuántas mesas por fila). Ahora arranca en
+  4 × 5 porque no sabemos la disposición real.
+- ⬜ Decidir si hace falta distinguir **grupo** (1SMX A / B): ahora el plano es único, y si los dos
+  grupos se sientan distinto habría que guardar un plano por grupo.
